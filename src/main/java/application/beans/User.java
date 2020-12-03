@@ -31,6 +31,8 @@ public class User
         this.animals = animals;
     }
 
+
+
     @Override
     public String toString()
     {
