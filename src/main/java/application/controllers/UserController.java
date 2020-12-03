@@ -77,6 +77,8 @@ public class UserController
     {
         if (userRepository.existsById(id))
         {
+            System.out.println("Prout");
+
             return userRepository.findById(id).get();
         }
 
