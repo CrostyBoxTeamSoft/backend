@@ -1,5 +1,8 @@
 package application.beans;
 
+import application.repositories.UserRepository;
+import org.apache.commons.validator.routines.EmailValidator;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -122,4 +125,5 @@ public class User
     {
         animals.remove(index);
     }
+
 }

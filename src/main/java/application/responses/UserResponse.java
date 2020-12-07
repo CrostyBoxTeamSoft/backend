@@ -1,6 +1,6 @@
 package application.responses;
 
-import application.beans.InscriptionParameters;
+import application.request.InscriptionParameters;
 import application.beans.User;
 import application.repositories.UserRepository;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -108,7 +108,7 @@ public class UserResponse
         return mdpMatche;
     }
 
-    /*  Check if mdp and confirmer is the same  */
+    /*  Check if mdp and confirmer are the same  */
     private void checkMDP(InscriptionParameters inscriptionParameters)
     {
         System.out.println("Check MDP");

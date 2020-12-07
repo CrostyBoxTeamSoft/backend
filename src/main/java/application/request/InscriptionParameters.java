@@ -1,4 +1,4 @@
-package application.beans;
+package application.request;
 
 
 public class InscriptionParameters
@@ -49,15 +49,4 @@ public class InscriptionParameters
         this.email = email;
     }
 
-    public InscriptionParameters()
-    {
-    }
-
-    public InscriptionParameters(String pseudo, String mdp, String confirmer, String email)
-    {
-        this.pseudo = pseudo;
-        this.mdp = mdp;
-        this.confirmer = confirmer;
-        this.email = email;
-    }
 }
