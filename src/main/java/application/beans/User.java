@@ -121,9 +121,27 @@ public class User
         animals.remove(animal);
     }
 
-    public void removeAnimal(int index)
+    public void removeAnimal(int id)
     {
-        animals.remove(index);
+        Animal toDelete = findById(id);
+
+        if (toDelete != null)
+        {
+            removeAnimal(toDelete);
+        }
+    }
+
+    public Animal findById(int id)
+    {
+        for (Animal animal : animals)
+        {
+            if (id == animal.getIdAnimal())
+            {
+                return animal;
+            }
+        }
+
+        return null;
     }
 
 }

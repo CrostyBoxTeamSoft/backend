@@ -1,5 +1,7 @@
 package application.beans;
 
+import application.enums.Comportement;
+import application.enums.Physiologie;
 import org.joda.time.DateTime;
 
 import javax.persistence.Entity;
@@ -14,25 +16,26 @@ public class Animal
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer idAnimal;
-    private String race;
-    private String type;    //Chat ou chien
+    private String espece;
+    private String race;    //Chat ou chien
     private DateTime anniversaire;
     private double poids;
-    private String comportement;
-    private String physiologique;
-    private String clinique;
+    private Comportement comportement;
+    private Physiologie physiologique;
+    private String machine;
 
     @Override
     public String toString()
     {
         return "Animal{" +
-                "race='" + race + '\'' +
-                ", type='" + type + '\'' +
+                "idAnimal=" + idAnimal +
+                ", espece='" + espece + '\'' +
+                ", race='" + race + '\'' +
                 ", anniversaire=" + anniversaire +
                 ", poids=" + poids +
-                ", comportement='" + comportement + '\'' +
-                ", physiologique='" + physiologique + '\'' +
-                ", clinique='" + clinique + '\'' +
+                ", comportement=" + comportement +
+                ", physiologique=" + physiologique +
+                ", machine='" + machine + '\'' +
                 '}';
     }
 
@@ -43,18 +46,39 @@ public class Animal
         if (o == null || getClass() != o.getClass()) return false;
         Animal animal = (Animal) o;
         return Double.compare(animal.poids, poids) == 0 &&
+                Objects.equals(idAnimal, animal.idAnimal) &&
+                Objects.equals(espece, animal.espece) &&
                 Objects.equals(race, animal.race) &&
-                Objects.equals(type, animal.type) &&
                 Objects.equals(anniversaire, animal.anniversaire) &&
-                Objects.equals(comportement, animal.comportement) &&
-                Objects.equals(physiologique, animal.physiologique) &&
-                Objects.equals(clinique, animal.clinique);
+                comportement == animal.comportement &&
+                physiologique == animal.physiologique &&
+                Objects.equals(machine, animal.machine);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(race, type, anniversaire, poids, comportement, physiologique, clinique);
+        return Objects.hash(idAnimal, espece, race, anniversaire, poids, comportement, physiologique, machine);
+    }
+
+    public String getMachine()
+    {
+        return machine;
+    }
+
+    public void setMachine(String machine)
+    {
+        this.machine = machine;
+    }
+
+    public String getEspece()
+    {
+        return espece;
+    }
+
+    public void setEspece(String espece)
+    {
+        this.espece = espece;
     }
 
     public String getRace()
@@ -65,16 +89,6 @@ public class Animal
     public void setRace(String race)
     {
         this.race = race;
-    }
-
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setType(String type)
-    {
-        this.type = type;
     }
 
     public DateTime getAnniversaire()
@@ -97,34 +111,29 @@ public class Animal
         this.poids = poids;
     }
 
-    public String getComportement()
+    public Comportement getComportement()
     {
         return comportement;
     }
 
-    public void setComportement(String comportement)
+    public void setComportement(Comportement comportement)
     {
         this.comportement = comportement;
     }
 
-    public String getPhysiologique()
+    public Physiologie getPhysiologique()
     {
         return physiologique;
     }
 
-    public void setPhysiologique(String physiologique)
+    public Integer getIdAnimal()
+    {
+        return idAnimal;
+    }
+
+    public void setPhysiologique(Physiologie physiologique)
     {
         this.physiologique = physiologique;
-    }
-
-    public String getClinique()
-    {
-        return clinique;
-    }
-
-    public void setClinique(String clinique)
-    {
-        this.clinique = clinique;
     }
 
     public Animal()

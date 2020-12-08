@@ -30,15 +30,23 @@ public class UserController
     @GetMapping(path="/all")
     public Iterable<User> getAll()
     {
-        System.out.println("GET");
+        System.out.println("GET all user");
         return userRepository.findAll();
     }
 
+    @GetMapping(path = "/testget")
+    public String testGet()
+    {
+        System.out.println("Test GET");
+        return "Just made a GET request";
+    }
 
     /*  A TESTER    */
     @DeleteMapping(path = "/delete/{id}")
     public String deleteUser(@PathVariable int id)
     {
+
+        System.out.println("DELETE a user");
 
         if (!userRepository.existsById(id))
         {
@@ -46,10 +54,10 @@ public class UserController
         }
 
         userRepository.deleteById(id);
-        return "User "+" has been deleted";
+        return "User has been deleted";
     }
 
-    /*  A TESTER    */
+    /*  OK    */
     @PatchMapping(path = "/update/email/{id}")
     public String updateEmail(@PathVariable int id, @RequestBody UpdateUserInfo updateUserInfo)
     {
@@ -68,7 +76,7 @@ public class UserController
         return null;
     }
 
-    /*  A TESTER    */
+    /*  OK    */
     @PatchMapping(path = "/update/password/{id}")
     public String updatePassword(@PathVariable int id, @RequestBody UpdateUserInfo updateUserInfo)
     {
