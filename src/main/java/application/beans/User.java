@@ -13,16 +13,13 @@ public class User
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer idUser;
-
     @Column(unique = true)
     private String pseudo;
-
     private String password;
-
     @Column(unique = true)
     private String email;
-
     private ArrayList<Animal> animals;
+    private String profilePic;
 
     public ArrayList<Animal> getAnimals()
     {
@@ -34,7 +31,20 @@ public class User
         this.animals = animals;
     }
 
+    public String getProfilePic()
+    {
+        return profilePic;
+    }
 
+    public void setProfilePic(String profilePic)
+    {
+        this.profilePic = profilePic;
+    }
+
+    public void setProfilePic()
+    {
+        profilePic = null;
+    }
 
     @Override
     public String toString()

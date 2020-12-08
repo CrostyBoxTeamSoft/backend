@@ -1,14 +1,15 @@
 package application.beans;
 
 import application.enums.Comportement;
+import application.enums.Espece;
 import application.enums.Physiologie;
+import application.enums.Race;
 import org.joda.time.DateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Objects;
 
 @Entity
 public class Animal
@@ -16,49 +17,80 @@ public class Animal
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer idAnimal;
-    private String espece;
+    private Espece espece;
     private String race;    //Chat ou chien
     private DateTime anniversaire;
     private double poids;
     private Comportement comportement;
     private Physiologie physiologique;
     private String machine;
+    private String nom;
+    private String photo;
+    private double ration;
+    private Race k1;
 
     @Override
     public String toString()
     {
         return "Animal{" +
                 "idAnimal=" + idAnimal +
-                ", espece='" + espece + '\'' +
+                ", espece=" + espece +
                 ", race='" + race + '\'' +
                 ", anniversaire=" + anniversaire +
                 ", poids=" + poids +
                 ", comportement=" + comportement +
                 ", physiologique=" + physiologique +
                 ", machine='" + machine + '\'' +
+                ", nom='" + nom + '\'' +
+                ", photo='" + photo + '\'' +
+                ", ration=" + ration +
+                ", k1=" + k1 +
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o)
+    public Race getK1()
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Animal animal = (Animal) o;
-        return Double.compare(animal.poids, poids) == 0 &&
-                Objects.equals(idAnimal, animal.idAnimal) &&
-                Objects.equals(espece, animal.espece) &&
-                Objects.equals(race, animal.race) &&
-                Objects.equals(anniversaire, animal.anniversaire) &&
-                comportement == animal.comportement &&
-                physiologique == animal.physiologique &&
-                Objects.equals(machine, animal.machine);
+        return k1;
     }
 
-    @Override
-    public int hashCode()
+    public void setK1(Race k1)
     {
-        return Objects.hash(idAnimal, espece, race, anniversaire, poids, comportement, physiologique, machine);
+        this.k1 = k1;
+    }
+
+    public double getRation()
+    {
+        return ration;
+    }
+
+    public void setRation(double ration)
+    {
+        this.ration = ration;
+    }
+
+    public void setIdAnimal(Integer idAnimal)
+    {
+        this.idAnimal = idAnimal;
+    }
+
+    public String getNom()
+    {
+        return nom;
+    }
+
+    public void setNom(String nom)
+    {
+        this.nom = nom;
+    }
+
+    public String getPhoto()
+    {
+        return photo;
+    }
+
+    public void setPhoto(String photo)
+    {
+        this.photo = photo;
     }
 
     public String getMachine()
@@ -71,12 +103,12 @@ public class Animal
         this.machine = machine;
     }
 
-    public String getEspece()
+    public Espece getEspece()
     {
         return espece;
     }
 
-    public void setEspece(String espece)
+    public void setEspece(Espece espece)
     {
         this.espece = espece;
     }
