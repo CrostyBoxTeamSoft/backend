@@ -6,10 +6,7 @@ import application.enums.Physiologie;
 import application.enums.Race;
 import org.joda.time.DateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Animal
@@ -45,7 +42,35 @@ public class Animal
                 ", photo='" + photo + '\'' +
                 ", ration=" + ration +
                 ", k1=" + k1 +
+                ", user=" + user +
+                ", croquette=" + croquette +
                 '}';
+    }
+
+    public User getUser()
+    {
+        return user;
+    }
+
+    public void setUser(User user)
+    {
+        this.user = user;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "idUser")
+    private User user;
+    @Transient
+    private Croquette croquette;
+
+    public Croquette getCroquette()
+    {
+        return croquette;
+    }
+
+    public void setCroquette(Croquette croquette)
+    {
+        this.croquette = croquette;
     }
 
     public Race getK1()
@@ -90,7 +115,20 @@ public class Animal
 
     public void setPhoto(String photo)
     {
-        this.photo = photo;
+        if (photo != null)
+        {
+            this.photo = photo;
+        }
+
+        else
+        {
+            setPhoto();
+        }
+    }
+
+    public void setPhoto()
+    {
+        photo = null;
     }
 
     public String getMachine()

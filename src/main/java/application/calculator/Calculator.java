@@ -4,15 +4,16 @@ import application.beans.Animal;
 
 public class Calculator
 {
-    /*
+    /*  Calcul des rations journalieres. Resultat en g  de croquettes   */
     public static double rationJournaliere(Animal animal)
     {
-
+        animal.setRation(besoinEnergetique(animal));
+        return 0.0;
     }
-    */
+
 
     /*  Calcul des besoins énergétiques journaliers. Résultat en kcal   */
-    private double besoinEnergetique(Animal animal)
+    private static double besoinEnergetique(Animal animal)
     {
         switch (animal.getEspece())
         {

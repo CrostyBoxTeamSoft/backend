@@ -21,6 +21,8 @@ public class User
     private ArrayList<Animal> animals;
     private String profilePic;
 
+    @OneToMany(mappedBy = "animal")
+    @JoinColumn(name = "idAnimal")
     public ArrayList<Animal> getAnimals()
     {
         return animals;
