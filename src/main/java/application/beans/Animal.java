@@ -1,10 +1,12 @@
 package application.beans;
 
+import application.calculator.Calculator;
 import application.enums.Comportement;
 import application.enums.Espece;
 import application.enums.Physiologie;
 import application.enums.Race;
-import org.joda.time.DateTime;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 
@@ -16,7 +18,7 @@ public class Animal
     private Integer idAnimal;
     private Espece espece;
     private String race;    //Chat ou chien
-    private DateTime anniversaire;
+    private LocalDate anniversaire;
     private double poids;
     private Comportement comportement;
     private Physiologie physiologique;
@@ -25,6 +27,19 @@ public class Animal
     private String photo;
     private double ration;
     private Race k1;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "fk_idUser")
+    private User user;
+    @Transient
+    private double kcalCroquettes;
+    private int nbRepas;
+
+    public void init()
+    {
+        nbRepas = 3;
+        Calculator.rationJournaliere(this);
+    }
 
     @Override
     public String toString()
@@ -43,8 +58,19 @@ public class Animal
                 ", ration=" + ration +
                 ", k1=" + k1 +
                 ", user=" + user +
-                ", croquette=" + croquette +
+                ", kcalCroquettes=" + kcalCroquettes +
+                ", nbRepas=" + nbRepas +
                 '}';
+    }
+
+    public int getNbRepas()
+    {
+        return nbRepas;
+    }
+
+    public void setNbRepas(int nbRepas)
+    {
+        this.nbRepas = nbRepas;
     }
 
     public User getUser()
@@ -57,20 +83,14 @@ public class Animal
         this.user = user;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "idUser")
-    private User user;
-    @Transient
-    private Croquette croquette;
-
-    public Croquette getCroquette()
+    public double getKcalCroquettes()
     {
-        return croquette;
+        return kcalCroquettes;
     }
 
-    public void setCroquette(Croquette croquette)
+    public void setKcalCroquettes(double kcalCroquettes)
     {
-        this.croquette = croquette;
+        this.kcalCroquettes = kcalCroquettes;
     }
 
     public Race getK1()
@@ -161,12 +181,12 @@ public class Animal
         this.race = race;
     }
 
-    public DateTime getAnniversaire()
+    public LocalDate getAnniversaire()
     {
         return anniversaire;
     }
 
-    public void setAnniversaire(DateTime anniversaire)
+    public void setAnniversaire(LocalDate anniversaire)
     {
         this.anniversaire = anniversaire;
     }

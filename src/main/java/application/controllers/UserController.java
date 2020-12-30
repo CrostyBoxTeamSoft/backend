@@ -1,18 +1,21 @@
 package application.controllers;
 
+import application.dao.UserDAO;
 import application.request.InscriptionParameters;
-import application.repositories.UserRepository;
 import application.beans.User;
-import application.request.UpdateUserInfo;
-import application.responses.UserResponse;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(path="/user")
 public class UserController
 {
+    /*
     @Autowired
     private UserRepository userRepository;
 
@@ -41,7 +44,6 @@ public class UserController
         return "Just made a GET request";
     }
 
-    /*  A TESTER    */
     @DeleteMapping(path = "/delete/{id}")
     public String deleteUser(@PathVariable int id)
     {
@@ -57,14 +59,12 @@ public class UserController
         return "User has been deleted";
     }
 
-    /*  OK    */
     @PatchMapping(path = "/update/email/{id}")
     public String updateEmail(@PathVariable int id, @RequestBody UpdateUserInfo updateUserInfo)
     {
         return updateUserInfo.updateEmail(userRepository, id);
     }
 
-    /*  FOR TEST    */
     @GetMapping(path = "/{id}")
     public User getUser(@PathVariable int id)
     {
@@ -76,13 +76,43 @@ public class UserController
         return null;
     }
 
-    /*  OK    */
     @PatchMapping(path = "/update/password/{id}")
     public String updatePassword(@PathVariable int id, @RequestBody UpdateUserInfo updateUserInfo)
     {
         return updateUserInfo.updatePassword(userRepository, id);
     }
 
+    */
 
+    @Autowired
+    private UserDAO userDAO;
+
+    @GetMapping(path = "/all")
+    public List<User> listeUser()
+    {
+        return userDAO.findAll();
+    }
+
+    @GetMapping(path = "/{id}")
+    public User userById(@PathVariable int id)
+    {
+        return userDAO.findById(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> addUser(@RequestBody InscriptionParameters inscriptionParameters)
+    {
+        User user = inscriptionParameters.createUser(userDAO);
+
+        if (user!=null)
+        {
+            URI location =
+                    ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getIdUser()).toUri();
+
+            return ResponseEntity.created(location).build();
+        }
+
+        return ResponseEntity.noContent().build();
+    }
 
 }

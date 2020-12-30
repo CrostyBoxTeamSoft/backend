@@ -1,7 +1,8 @@
 package application.controllers;
 
-import application.beans.User;
+import application.beans.Animal;
 import application.repositories.AnimalRepository;
+import application.repositories.UserRepository;
 import application.request.AnimalRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +14,42 @@ public class AnimalController
     @Autowired
     private AnimalRepository animalRepository;
 
-    @PostMapping(path = "add")
-    public void addAnimal(@RequestBody AnimalRequest animalRequest)
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping(path="/all")
+    public Iterable<Animal> allAnimal()
     {
-        System.out.println("Add Animal");
-        animalRequest.createAnimal(animalRepository);
+        return animalRepository.findAll();
     }
 
-    @DeleteMapping(path = "delete/{idUser}/{idAnimal}")
-    public void removeAnimal(@PathVariable("idUser") int idUser, @PathVariable("idAnimal") int idAnimal)
+    @PostMapping(path = "/add")
+    public String addAnimal(@RequestBody AnimalRequest animalRequest)
     {
+        System.out.println("Add Animal");
+        return animalRequest.createAnimal(animalRepository, userRepository);
+    }
+
+    @DeleteMapping(path = "/delete/{idUser}/{idAnimal}")
+    public String removeAnimal(@PathVariable("idAnimal") int idAnimal, @PathVariable("idUser") int idUser)
+    {
+        System.out.println("DELETE an animal");
+
+        if (userRepository.existsById(idUser))
+        {
+            if (animalRepository.existsById(idAnimal))
+            {
+                animalRepository.deleteById(idAnimal);
+                return "Animal deleted";
+            }
+
+            else
+            {
+                return "Animal doesn't exist";
+            }
+        }
+
+        return "User doesn't exist";
 
     }
 

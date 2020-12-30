@@ -1,25 +1,37 @@
 package application.request;
 
 import application.beans.Animal;
+import application.beans.User;
 import application.calculator.Calculator;
 import application.enums.Comportement;
 import application.enums.Espece;
 import application.enums.Physiologie;
 import application.repositories.AnimalRepository;
-import org.joda.time.DateTime;
+import application.repositories.UserRepository;
+import org.joda.time.LocalDate;
 
 public class AnimalRequest
 {
-    private Espece espece;
-    private String race;    //Chat ou chien
-    private DateTime anniversaire;
+    private Espece espece;  //Chat ou chien
+    private String race;
+    private LocalDate anniversaire;
     private double poids;
     private Comportement comportement;
     private Physiologie physiologique;
     private String machine;
     private String nom;
     private String photo;
+    private int idUser;
 
+    public int getIdUser()
+    {
+        return idUser;
+    }
+
+    public void setIdUser(int idUser)
+    {
+        this.idUser = idUser;
+    }
 
     public Espece getEspece()
     {
@@ -41,12 +53,12 @@ public class AnimalRequest
         this.race = race;
     }
 
-    public DateTime getAnniversaire()
+    public LocalDate getAnniversaire()
     {
         return anniversaire;
     }
 
-    public void setAnniversaire(DateTime anniversaire)
+    public void setAnniversaire(LocalDate anniversaire)
     {
         this.anniversaire = anniversaire;
     }
@@ -111,8 +123,9 @@ public class AnimalRequest
         this.photo = photo;
     }
 
-    public String createAnimal(AnimalRepository animalRepository)
+    public String createAnimal(AnimalRepository animalRepository, UserRepository userRepository)
     {
+
         Animal animal = new Animal();
         animal.setEspece(espece);
         animal.setRace(race);
@@ -123,10 +136,15 @@ public class AnimalRequest
         animal.setMachine(machine);
         animal.setNom(nom);
         animal.setPhoto(photo);
+        animal.setUser(userRepository.findById(idUser).get());
 
-        animal.setRation(Calculator.rationJournaliere(animal));
+        User user = userRepository.findById(idUser).get();
+        user.addAnimal(animal);
+
+        animal.init();
 
         animalRepository.save(animal);
+        userRepository.save(user);
 
         return "animal created";
 

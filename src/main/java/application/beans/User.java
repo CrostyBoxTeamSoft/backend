@@ -1,10 +1,10 @@
 package application.beans;
 
-import application.repositories.UserRepository;
-import org.apache.commons.validator.routines.EmailValidator;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,18 +12,29 @@ public class User
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer idUser;
+    private int idUser;
     @Column(unique = true)
     private String pseudo;
     private String password;
     @Column(unique = true)
     private String email;
-    private ArrayList<Animal> animals;
+
+    public User(Integer idUser, String pseudo, String password, String email, List<Animal> animals, String profilePic)
+    {
+        this.idUser = idUser;
+        this.pseudo = pseudo;
+        this.password = password;
+        this.email = email;
+        this.animals = animals;
+        this.profilePic = profilePic;
+    }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Animal> animals;
     private String profilePic;
 
-    @OneToMany(mappedBy = "animal")
-    @JoinColumn(name = "idAnimal")
-    public ArrayList<Animal> getAnimals()
+    public List<Animal> getAnimals()
     {
         return animals;
     }
@@ -83,12 +94,12 @@ public class User
     {
     }
 
-    public Integer getIdUser()
+    public int getIdUser()
     {
         return idUser;
     }
 
-    public void setIdUser(Integer idUser)
+    public void setIdUser(int idUser)
     {
         this.idUser = idUser;
     }
@@ -135,7 +146,7 @@ public class User
 
     public void removeAnimal(int id)
     {
-        Animal toDelete = findById(id);
+        Animal toDelete = findAnimalById(id);
 
         if (toDelete != null)
         {
@@ -143,7 +154,7 @@ public class User
         }
     }
 
-    public Animal findById(int id)
+    public Animal findAnimalById(int id)
     {
         for (Animal animal : animals)
         {

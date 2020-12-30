@@ -5,10 +5,10 @@ import application.beans.Animal;
 public class Calculator
 {
     /*  Calcul des rations journalieres. Resultat en g  de croquettes   */
-    public static double rationJournaliere(Animal animal)
+    public static void rationJournaliere(Animal animal)
     {
-        animal.setRation(besoinEnergetique(animal));
-        return 0.0;
+        double rationJournaliere = besoinEnergetique(animal)/animal.getKcalCroquettes();
+        animal.setRation(rationJournaliere);
     }
 
 
