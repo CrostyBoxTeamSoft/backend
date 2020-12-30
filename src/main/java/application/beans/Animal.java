@@ -6,6 +6,7 @@ import application.enums.Espece;
 import application.enums.Physiologie;
 import application.enums.Race;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;

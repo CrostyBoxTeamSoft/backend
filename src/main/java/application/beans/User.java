@@ -1,22 +1,26 @@
 package application.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@JsonIgnoreProperties(value = {"password"})
 @Entity
 public class User
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idUser;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idUser;
     @Column(unique = true)
     private String pseudo;
     private String password;
     @Column(unique = true)
+    @Email
     private String email;
 
     public User(Integer idUser, String pseudo, String password, String email, List<Animal> animals, String profilePic)
@@ -94,12 +98,12 @@ public class User
     {
     }
 
-    public int getIdUser()
+    public Integer getIdUser()
     {
         return idUser;
     }
 
-    public void setIdUser(int idUser)
+    public void setIdUser(Integer idUser)
     {
         this.idUser = idUser;
     }

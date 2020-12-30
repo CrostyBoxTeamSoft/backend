@@ -14,3 +14,13 @@ public class CrostyboxApplication {
 	}
 
 }
+
+/*	MySQL Configuration for application.properties
+
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/crostybox_db?serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=RootPassword
+spring.jpa.show-sql=true
+
+ */
