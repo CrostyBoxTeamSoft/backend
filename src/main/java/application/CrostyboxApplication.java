@@ -6,6 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * Main
+ * Lance et prepare le serveur a intercepter des requetes HTTP et realiser des operations sur les bases de donnees
+ */
 @SpringBootApplication
 public class CrostyboxApplication {
 

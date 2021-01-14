@@ -2,17 +2,29 @@ package application.calculator;
 
 import application.beans.Animal;
 
-public class Calculator
+/**
+ * Class Calculator
+ * Permet de calculer la ration journaliere ideale d'un animal
+ */
+public class  Calculator
 {
-    /*  Calcul des rations journalieres. Resultat en g  de croquettes   */
+    /**
+     * Calcul la ration journliere ideal d'un animal. Resultat en gramme
+     * @param animal
+     * @see Animal
+     */
     public static void rationJournaliere(Animal animal)
     {
         double rationJournaliere = besoinEnergetique(animal)/animal.getKcalCroquettes();
         animal.setRation(rationJournaliere);
     }
 
-
-    /*  Calcul des besoins énergétiques journaliers. Résultat en kcal   */
+    /**
+     * Calcul le besoin energetique journalier d'un animal. Resultat en kcal
+     * @param animal
+     * @return
+     * @see Animal
+     */
     private static double besoinEnergetique(Animal animal)
     {
         switch (animal.getEspece())

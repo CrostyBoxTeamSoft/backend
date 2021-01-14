@@ -1,5 +1,8 @@
 package application.enums;
 
+/**
+ * Represente le coefficient lie a la physiologie permettant de calculer les rations journalieres
+ */
 public enum Physiologie
 {
     /*  CHAT    */
@@ -37,8 +40,15 @@ public enum Physiologie
     CASTRECHIEN(0.8);
 
 
+    /**
+     * Coefficient lie a la physiologie pour le calcul de ration
+     */
     public final double stade;
 
+    /**
+     * Constructeur
+     * @param stade
+     */
     Physiologie(double stade)
     {
         this.stade = stade;
