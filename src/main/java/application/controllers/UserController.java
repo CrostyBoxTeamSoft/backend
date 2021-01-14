@@ -1,80 +1,125 @@
 package application.controllers;
 
+import application.dao.UserDAO;
+import application.exceptions.UserNotFoundException;
 import application.request.InscriptionParameters;
-import application.repositories.UserRepository;
 import application.beans.User;
-import application.request.UpdateUserInfo;
-import application.responses.UserResponse;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Cette classe permet de gerer la reception de requetes HTTP. Elle est utilisee pour les requetes en lien avec la
+ * creation, modification d'utilisateur
+ */
 @RestController
 @RequestMapping(path="/user")
 public class UserController
 {
+    /**
+     * @see UserDAO
+     */
     @Autowired
-    private UserRepository userRepository;
+    private UserDAO userDAO;
 
-    @PostMapping(path="/add")
-    public UserResponse inscription(@RequestBody InscriptionParameters inscriptionParameters)
+    /**
+     * Reception d'une requete GET demandant d'afficher la liste des utilisateurs dans la base de donnes ainsi que
+     * leurs informations.
+     * A utiliser uniquement pour des fins de test. Sera supprime pour l'application finale
+     * @return  La liste des utilisateurs dans la base de donnees
+     */
+    @GetMapping(path = "/all")
+    public List<User> listeUser()
     {
-        System.out.println("POST");
-        UserResponse userResponse = new UserResponse();
-
-        userResponse.saveUser(userRepository, inscriptionParameters);
-
-        return userResponse;
+        return userDAO.findAll();
     }
 
-    @GetMapping(path="/all")
-    public Iterable<User> getAll()
-    {
-        System.out.println("GET");
-        return userRepository.findAll();
-    }
-
-
-    /*  A TESTER    */
-    @DeleteMapping(path = "/delete/{id}")
-    public String deleteUser(@PathVariable int id)
-    {
-
-        if (!userRepository.existsById(id))
-        {
-            return "User doesn't exist";
-        }
-
-        userRepository.deleteById(id);
-        return "User "+" has been deleted";
-    }
-
-    /*  A TESTER    */
-    @PatchMapping(path = "/update/email/{id}")
-    public String updateEmail(@PathVariable int id, @RequestBody UpdateUserInfo updateUserInfo)
-    {
-        return updateUserInfo.updateEmail(userRepository, id);
-    }
-
-    /*  FOR TEST    */
+    /**
+     * Reception d'une requete GET demandant d'afficher un utilisateur en particulier
+     * @param id
+     * Cle primaire dans la base de donne de l'utilisateur dont on veut les informations
+     * @return L'utilisateur ayant la cle primaire " id " dans la base de donnees
+     * @throws UserNotFoundException
+     * @see User
+     */
     @GetMapping(path = "/{id}")
-    public User getUser(@PathVariable int id)
+    public User userById(@PathVariable int id) throws UserNotFoundException
     {
-        if (userRepository.findById(id).isPresent())
+        User user = userDAO.findById(id);
+
+        if (user==null)
         {
-            return userRepository.findById(id).get();
+            throw new UserNotFoundException(id);
         }
 
-        return null;
+        return user;
     }
 
-    /*  A TESTER    */
-    @PatchMapping(path = "/update/password/{id}")
-    public String updatePassword(@PathVariable int id, @RequestBody UpdateUserInfo updateUserInfo)
+    /**
+     * Reception d'une requête POST envoyant la liste des reseaux WiFi environnant
+     * @param networks
+     * La liste des reseaux WiFi environnant. Techniquement on peut envoyer n'importe quelle liste, mais ici ce n'est
+     * pas le but
+     */
+    @PostMapping(path = "/network")
+    public void networkList(@RequestBody Map<String, Object> networks)
     {
-        return updateUserInfo.updatePassword(userRepository, id);
+        System.out.println("*** Network list ***");
+        System.out.println(networks);
     }
 
+    /**
+     * Reception d'une requete POST avec l'adresse MAC de la machine qui a effectue la requete. Dans notre cas c'est
+     * l'adresse MAC de l'Arduino (qui équivaut a la Crosty Box)
+     * @param arduinoMacAdress
+     * Adresse MAC de l'arduino
+     */
+    @PostMapping(path = "/arduinomac")
+    public void postPath(@PathVariable String arduinoMacAdress)
+    {
+        System.out.println("Mac adress arduino = "+arduinoMacAdress);
+    }
 
+    /**
+     * Reception d'une requete POST pour inscrire un utilisateur  dans la base de donnes
+     * @param inscriptionParameters
+     * Les informations contenues dans le formulaire d'inscription
+     * @return Une reponse HTTP en fonction de la reussite (201 Created) ou l'echec (204 No Content) de la creation de
+     * compte.
+     */
+    @PostMapping
+    public ResponseEntity<User> addUser(@RequestBody InscriptionParameters inscriptionParameters)
+    {
+        User user = inscriptionParameters.createUser(userDAO);
+
+        if (user!=null)
+        {
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Reception d'une requete GET afin de test la bonne connexion entre l'Arduino et le serveur. Uniquement utilise
+     * a des fins de tests
+     */
+    @GetMapping(path = "/arduino")
+    public void printArduino()
+    {
+        System.out.println("Get received from Arduino");
+    }
+
+    /**
+     * Reception d'une requete afin de modifier l'adresse email
+     */
+    public void updateEmail()
+    {
+
+    }
 
 }

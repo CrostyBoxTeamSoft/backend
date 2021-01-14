@@ -6,6 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * Main
+ * Lance et prepare le serveur a intercepter des requetes HTTP et realiser des operations sur les bases de donnees
+ */
 @SpringBootApplication
 public class CrostyboxApplication {
 
@@ -14,3 +18,13 @@ public class CrostyboxApplication {
 	}
 
 }
+
+/*	MySQL Configuration for application.properties
+
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/crostybox_db?serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=RootPassword
+spring.jpa.show-sql=true
+
+ */
