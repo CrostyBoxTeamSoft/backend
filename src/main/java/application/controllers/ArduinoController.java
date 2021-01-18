@@ -4,6 +4,7 @@ import application.beans.Arduino;
 import application.dao.ArduinoDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class ArduinoController
      * @param arduinoMacAdress
      * Adresse MAC de l'arduino
      */
-    @PostMapping(path = "/arduinomac")
+    @PostMapping(path = "/mac")
     public void postPath(@PathVariable String arduinoMacAdress)
     {
         System.out.println("Mac adress arduino = "+arduinoMacAdress);
@@ -44,6 +45,24 @@ public class ArduinoController
         System.out.println(arduino);
         //Recoit adresse MAC et IP d'arduino
     }
+
+    @GetMapping(path = "/{id}/camera")
+    public void getCamera()
+    {
+        final String uri = "";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(uri, String.class);
+    }
+
+    @GetMapping(path = "/{id}/poids")
+    public void getPoids()
+    {
+        final String uri = "";
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(uri, String.class);
+    }
+
 
 
 }

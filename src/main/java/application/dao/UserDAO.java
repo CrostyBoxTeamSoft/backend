@@ -67,4 +67,8 @@ public interface UserDAO extends JpaRepository<User, Integer>
      */
     public boolean existsByEmail(String email);
 
+    public boolean existsByPseudo(String pseudo);
+
+    public boolean existsByPassword(String password);
+
 }

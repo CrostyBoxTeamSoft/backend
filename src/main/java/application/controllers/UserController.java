@@ -4,6 +4,7 @@ import application.dao.UserDAO;
 import application.exceptions.UserNotFoundException;
 import application.services.InscriptionParameters;
 import application.beans.User;
+import application.services.Logins;
 import application.services.UpdateUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,9 +35,9 @@ public class UserController
      * @return  La liste des utilisateurs dans la base de donnees
      */
     @GetMapping(path = "/all")
-    public List<User> listeUser()
+    public ResponseEntity<List<User>> listeUser()
     {
-        return userDAO.findAll();
+        return new ResponseEntity<>(userDAO.findAll(), HttpStatus.OK);
     }
 
     /**
@@ -78,16 +79,6 @@ public class UserController
         }
 
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-    }
-
-    /**
-     * Reception d'une requete GET afin de test la bonne connexion entre l'Arduino et le serveur. Uniquement utilise
-     * a des fins de tests
-     */
-    @GetMapping(path = "/arduino")
-    public void printArduino()
-    {
-        System.out.println("Get received from Arduino");
     }
 
     /**
@@ -143,6 +134,25 @@ public class UserController
         }
 
         return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping(path = "/connexion")
+    public ResponseEntity<User> connexion(@RequestBody Logins logins)
+    {
+        if(logins.ifExists(userDAO))
+        {
+            User user = userDAO.findByPseudo(logins.getPseudo());
+
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(path = "test")
+    public ResponseEntity<String> testGet()
+    {
+        return new ResponseEntity<>("Nice", HttpStatus.OK);
     }
 
 }
