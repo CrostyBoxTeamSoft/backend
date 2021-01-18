@@ -34,6 +34,40 @@ public class User
      */
     private String password;
 
+    @Override
+    public String toString()
+    {
+        return "User{" +
+                "idUser=" + idUser +
+                ", pseudo='" + pseudo + '\'' +
+                ", password='" + password + '\'' +
+                ", arduino=" + arduino +
+                ", email='" + email + '\'' +
+                ", repeatPassword='" + repeatPassword + '\'' +
+                ", animals=" + animals +
+                ", profilePic='" + profilePic + '\'' +
+                '}';
+    }
+
+    public void setAnimals(List<Animal> animals)
+    {
+        this.animals = animals;
+    }
+
+    public Arduino getArduino()
+    {
+        return arduino;
+    }
+
+    public void setArduino(Arduino arduino)
+    {
+        this.arduino = arduino;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_idArduino", referencedColumnName = "id")
+    private Arduino arduino;
+
     /**
      * Email de l'utilisateur, doit etre unique
      */
@@ -124,18 +158,6 @@ public class User
     public void setProfilePic()
     {
         profilePic = null;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "User{" +
-                "idUser=" + idUser +
-                ", pseudo='" + pseudo + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", animals=" + animals +
-                '}';
     }
 
     @Override

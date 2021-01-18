@@ -93,7 +93,8 @@ public class Animal
     private User user;
 
     /**
-     * Les calories des croquettes que le chien mange. Cette propriete n'est pas represente dans la base de donnees
+     * Les calories des croquettes pour 100g que le chien mange. Cette propriete n'est pas represente dans la base de
+     * donnees
      */
     @Transient
     private double kcalCroquettes;

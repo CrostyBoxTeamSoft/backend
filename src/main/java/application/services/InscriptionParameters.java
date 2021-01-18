@@ -1,11 +1,9 @@
-package application.request;
+package application.services;
 
 
 import application.beans.User;
 import application.dao.UserDAO;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotEmpty;
 

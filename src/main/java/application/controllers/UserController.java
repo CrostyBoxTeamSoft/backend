@@ -2,8 +2,9 @@ package application.controllers;
 
 import application.dao.UserDAO;
 import application.exceptions.UserNotFoundException;
-import application.request.InscriptionParameters;
+import application.services.InscriptionParameters;
 import application.beans.User;
+import application.services.UpdateUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,31 +61,6 @@ public class UserController
     }
 
     /**
-     * Reception d'une requête POST envoyant la liste des reseaux WiFi environnant
-     * @param networks
-     * La liste des reseaux WiFi environnant. Techniquement on peut envoyer n'importe quelle liste, mais ici ce n'est
-     * pas le but
-     */
-    @PostMapping(path = "/network")
-    public void networkList(@RequestBody Map<String, Object> networks)
-    {
-        System.out.println("*** Network list ***");
-        System.out.println(networks);
-    }
-
-    /**
-     * Reception d'une requete POST avec l'adresse MAC de la machine qui a effectue la requete. Dans notre cas c'est
-     * l'adresse MAC de l'Arduino (qui équivaut a la Crosty Box)
-     * @param arduinoMacAdress
-     * Adresse MAC de l'arduino
-     */
-    @PostMapping(path = "/arduinomac")
-    public void postPath(@PathVariable String arduinoMacAdress)
-    {
-        System.out.println("Mac adress arduino = "+arduinoMacAdress);
-    }
-
-    /**
      * Reception d'une requete POST pour inscrire un utilisateur  dans la base de donnes
      * @param inscriptionParameters
      * Les informations contenues dans le formulaire d'inscription
@@ -116,10 +92,57 @@ public class UserController
 
     /**
      * Reception d'une requete afin de modifier l'adresse email
+     * @param updateUserInfo
+     * @see UpdateUserInfo
+     * @param id
+     * Cle primaire de l'utilisateur dont on souhaite mettre a jour l'email
+     * @return
+     * Une reponse HTTP ainsi qu'un message en fonction de la reussite ou non de l'operation
      */
-    public void updateEmail()
+    @PatchMapping(path = "/{id}/email")
+    public ResponseEntity<String> updateEmail(@RequestBody UpdateUserInfo updateUserInfo, @PathVariable int id )
     {
+        String response = updateUserInfo.updateEmail(userDAO, id);
 
+        if (response.equals(UpdateUserInfo.EMAILOK))
+        {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * @param updateUserInfo
+     * @see UpdateUserInfo
+     * @param id
+     * Cle primaire de l'utilisateur dont on souhaite mettre a jour le mot de passe
+     * @return
+     * Une reponse HTTP ainsi qu'un message en fonction de la reussite ou non de l'operation
+     */
+    @PatchMapping(path = "/{id}/password")
+    public ResponseEntity<String> updatePassword(@RequestBody UpdateUserInfo updateUserInfo, @PathVariable int id)
+    {
+        String response = updateUserInfo.updatePassword(userDAO, id);
+
+        if (response.equals(UpdateUserInfo.PASSWORDOK))
+        {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @DeleteMapping(path = "/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable int id)
+    {
+        if (userDAO.existsById(id))
+        {
+            userDAO.deleteById(id);
+            return new ResponseEntity<>("User deleted", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
     }
 
 }

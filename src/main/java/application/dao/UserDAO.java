@@ -50,4 +50,21 @@ public interface UserDAO extends JpaRepository<User, Integer>
      * @return
      */
     public User findByPseudo(String pseudo);
+
+    /**
+     * @param id
+     * Cle primaire de l'utilisateur a trouver
+     * @return
+     * true si l'utilisateur existe, false sinon
+     */
+    public boolean existsById(int id);
+
+    /**
+     * @param email
+     * Email de l'utilisateur a trouver
+     * @return
+     * true si l'utilisateur existe, false sinon
+     */
+    public boolean existsByEmail(String email);
+
 }

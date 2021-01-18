@@ -1,12 +1,12 @@
-package application.request;
+package application.services;
 
 import application.beans.Animal;
 import application.beans.User;
+import application.dao.AnimalDAO;
+import application.dao.UserDAO;
 import application.enums.Comportement;
 import application.enums.Espece;
 import application.enums.Physiologie;
-import application.repositories.AnimalRepository;
-import application.repositories.UserRepository;
 import org.joda.time.LocalDate;
 
 /**
@@ -63,6 +63,10 @@ public class AnimalRequest
      * @see Animal
      */
     private int idUser;
+
+    public static final String USERNOTFOUND = "User could not be found";
+
+    public static final String ANIMALCREATED = "Animal created";
 
     /**
      * Retourne idUser
@@ -246,13 +250,12 @@ public class AnimalRequest
 
     /**
      * Cree un animal, l'assigne a un utilisateur, enregistre l'animal et l'utilisateur dans la base de donnees
-     * @param animalRepository
-     * @param userRepository
+     * @param animalDAO
+     * @param userDAO
      * @return
      */
-    public String createAnimal(AnimalRepository animalRepository, UserRepository userRepository)
+    public String createAnimal(AnimalDAO animalDAO, UserDAO userDAO)
     {
-
         Animal animal = new Animal();
         animal.setEspece(espece);
         animal.setRace(race);
@@ -263,19 +266,24 @@ public class AnimalRequest
         animal.setMachine(machine);
         animal.setNom(nom);
         animal.setPhoto(photo);
-        animal.setUser(userRepository.findById(idUser).get());
+        animal.setUser(userDAO.findById(idUser));
 
-        User user = userRepository.findById(idUser).get();
-        user.addAnimal(animal);
+        if (userDAO.existsById(idUser))
+        {
+            User user = userDAO.findById(idUser);
+            user.addAnimal(animal);
+            userDAO.save(user);
+            animal.init();
+            animalDAO.save(animal);
 
-        animal.init();
+            return ANIMALCREATED;
+        }
 
-        animalRepository.save(animal);
-        userRepository.save(user);
-
-        return "animal created";
+        return USERNOTFOUND;
 
     }
+
+
 
 
 }

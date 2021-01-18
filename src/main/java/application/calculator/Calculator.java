@@ -15,7 +15,7 @@ public class  Calculator
      */
     public static void rationJournaliere(Animal animal)
     {
-        double rationJournaliere = besoinEnergetique(animal)/animal.getKcalCroquettes();
+        double rationJournaliere = besoinEnergetique(animal)/animal.getKcalCroquettes()*100;
         animal.setRation(rationJournaliere);
     }
 

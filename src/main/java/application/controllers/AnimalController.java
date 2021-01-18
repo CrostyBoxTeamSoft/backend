@@ -1,10 +1,12 @@
 package application.controllers;
 
 import application.beans.Animal;
-import application.repositories.AnimalRepository;
-import application.repositories.UserRepository;
-import application.request.AnimalRequest;
+import application.dao.AnimalDAO;
+import application.dao.UserDAO;
+import application.services.AnimalRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,17 +15,17 @@ public class AnimalController
 {
     /**
      * Represente la table Animal mySQL ou sont stockes tout les animaux
-     * @see AnimalRepository
+     * @see AnimalDAO
      */
     @Autowired
-    private AnimalRepository animalRepository;
+    private AnimalDAO animalDAO;
 
     /**
      * Represente la table User mySQL ou sont stockes tout les utilisateurs
-     * @see application.beans.User
+     * @see UserDAO
      */
     @Autowired
-    private UserRepository userRepository;
+    private UserDAO userDAO;
 
     /**
      * Retourne tout les animaux enregistres dans la base de donnees
@@ -32,7 +34,7 @@ public class AnimalController
     @GetMapping(path="/all")
     public Iterable<Animal> allAnimal()
     {
-        return animalRepository.findAll();
+        return animalDAO.findAll();
     }
 
     /**
@@ -41,11 +43,18 @@ public class AnimalController
      * @return
      * Cree un animal dans la base de donnees
      */
-    @PostMapping(path = "/add")
-    public String addAnimal(@RequestBody AnimalRequest animalRequest)
+    @PostMapping(path = "/{id}")
+    public ResponseEntity<String> addAnimal(@RequestBody AnimalRequest animalRequest, @PathVariable int id)
     {
-        System.out.println("Add Animal");
-        return animalRequest.createAnimal(animalRepository, userRepository);
+        System.out.println("Add animal");
+         String response = animalRequest.createAnimal(animalDAO, userDAO);
+
+         if (response.equals(AnimalRequest.ANIMALCREATED))
+         {
+             return new ResponseEntity<>(response, HttpStatus.CREATED);
+         }
+
+         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -55,28 +64,28 @@ public class AnimalController
      * @param idUser
      * la cle primaire de l'utilisateur possedant l'animal
      * @return
+     * Une reponse HTTP avec un message d'erreur ou de succes
      */
     @DeleteMapping(path = "/delete/{idUser}/{idAnimal}")
-    public String removeAnimal(@PathVariable("idAnimal") int idAnimal, @PathVariable("idUser") int idUser)
+    public ResponseEntity<String> removeAnimal(@PathVariable("idAnimal") int idAnimal, @PathVariable("idUser") int idUser)
     {
         System.out.println("DELETE an animal");
 
-        if (userRepository.existsById(idUser))
+        if (userDAO.existsById(idUser))
         {
-            if (animalRepository.existsById(idAnimal))
+            if (animalDAO.existsById(idAnimal))
             {
-                animalRepository.deleteById(idAnimal);
-                return "Animal deleted";
+                animalDAO.deleteById(idAnimal);
+                return new ResponseEntity<>("Animal deleted", HttpStatus.OK);
             }
 
             else
             {
-                return "Animal doesn't exist";
+                return new ResponseEntity<>("Animal doesn't exist", HttpStatus.NOT_FOUND);
             }
         }
 
-        return "User doesn't exist";
-
+        return new ResponseEntity<>("User doesn't exist", HttpStatus.NOT_FOUND);
     }
 
 

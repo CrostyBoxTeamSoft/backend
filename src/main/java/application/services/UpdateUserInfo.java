@@ -1,7 +1,7 @@
-package application.request;
+package application.services;
 
 import application.beans.User;
-import application.repositories.UserRepository;
+import application.dao.UserDAO;
 import org.apache.commons.validator.routines.EmailValidator;
 
 /**
@@ -97,14 +97,13 @@ public class UpdateUserInfo
 
     /**
      * Mis a jour du mail
-     * @param userRepository
-     * Representation de la table User
+     * @param userDAO
      * @param id
      * Cle primaire de l'utilisateur a modifie
      * @return
      * Message d'erreur ou de confirmation
      */
-    public String updateEmail(UserRepository userRepository, int id)
+    public String updateEmail(UserDAO userDAO, int id)
     {
         EmailValidator emailValidator = EmailValidator.getInstance();
 
@@ -112,16 +111,16 @@ public class UpdateUserInfo
         {
             return NEWEMAILFORMATNOK;
         }
-        if (userRepository.findById(id).isPresent())
+        if (userDAO.existsById(id))
         {
-            User user = userRepository.findById(id).get();
+            User user = userDAO.findById(id);
 
             if (user.getEmail().matches(oldInfo))
             {
-                if (userRepository.findByEmail(newInfo).isEmpty())
+                if (userDAO.existsByEmail(newInfo))
                 {
                     user.setEmail(newInfo);
-                    userRepository.save(user);
+                    userDAO.save(user);
                     return EMAILOK;
                 }
 
@@ -137,23 +136,22 @@ public class UpdateUserInfo
 
     /**
      * Mis a jour du mot de passe
-     * @param userRepository
-     * Representation de la table User
+     * @param userDAO
      * @param id
      * Cle primaire de l'utilisateur a mettre a jour
      * @return
      * Message d'erreur ou de confirmation
      */
-    public String updatePassword(UserRepository userRepository, int id)
+    public String updatePassword(UserDAO userDAO, int id)
     {
-        if (userRepository.findById(id).isPresent())
+        if (userDAO.existsById(id))
         {
-            User user = userRepository.findById(id).get();
+            User user = userDAO.findById(id);
 
             if (user.getPassword().matches(oldInfo))
             {
                 user.setPassword(newInfo);
-                userRepository.save(user);
+                userDAO.save(user);
 
                 return PASSWORDOK;
             }
